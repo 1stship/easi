@@ -30,7 +30,7 @@ void setup() {
   // ブートストラップをせず払い出したデバイスIDとキーを使用する場合はこちら
   // char identity[] = "d-01234567890123456789";
   // uint8 psk[16] =  { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff };
-  // lwm2mSetSecurityParam(&lwm2m, "d-9ilj3stdaeqdgd5fuo4g", &psk[0]);
+  // lwm2mSetSecurityParam(&lwm2m, identity, &psk[0]);
 
   // オブジェクトの設定のサンプル
   // 以下のオブジェクトリストのうちID:0〜9を登録済み
