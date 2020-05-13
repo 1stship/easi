@@ -40,7 +40,7 @@ Reboot /3/0/4となっているリソースを探し、EXECUTEのボタン(右�
 
 インスタンスの追加により、LwM2MのオブジェクトをSORACOM Inventoryの管理対象とすることができます。
 
-LwM2Mのオブジェクトは以下のサイトに公開されています。このうちID:0 〜 ID:9までを追加することができます。
+LwM2Mのオブジェクトは以下のサイトに公開されています。このうちID:0 〜 ID:9、ID:3200 〜 3203、ID:3300 〜 3350を追加することができます。
 
 http://www.openmobilealliance.org/wp/omna/lwm2m/lwm2mregistry.html
 

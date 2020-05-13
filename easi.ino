@@ -2,7 +2,6 @@
 
 Lwm2m lwm2m;
 WioLTE wio;
-char sampleText[16] = { 0 };
 
 void setup() {
   // 初期化
@@ -33,15 +32,19 @@ void setup() {
   // lwm2mSetSecurityParam(&lwm2m, identity, &psk[0]);
 
   // オブジェクトの設定のサンプル
-  // 以下のオブジェクトリストのうちID:0〜9を登録済み
+  // 以下のオブジェクトリストのうちID:0 〜 ID:9、ID:3200 〜 3203、ID:3300 〜 3350を登録済み
   // http://www.openmobilealliance.org/wp/omna/lwm2m/lwm2mregistry.html
+  
   // デバイスオブジェクトをインスタンス0番として登録
   addInstance(3, 0); 
 
+  // Light Controlオブジェクトをインスタンス0番として登録
+  addInstance(3311, 0);
+
   // オペレーションとメソッドを対応づけのサンプル
-  setReadResourceOperation   (3, 0, 2,  &getSerial);   // READ    /3/0/2  でgetSerialが呼ばれるよう設定
-  setWriteResourceOperation  (3, 0, 15, &setTimezone); // WRITE   /3/0/15 でsetTimezoneが呼ばれるよう設定
-  setExecuteResourceOperation(3, 0, 4,  &reboot);      // EXECUTE /3/0/3  でrebootが呼ばれるよう設定
+  setReadResourceOperation   (   3, 0,    2, &getSerial);    // READ    /3/0/2       でgetSerialが呼ばれるよう設定
+  setWriteResourceOperation  (3311, 0, 5850, &turnOnOffLED); // WRITE   /3311/0/5850 turnOnOffLEDが呼ばれるよう設定
+  setExecuteResourceOperation(   3, 0,    4, &reboot);       // EXECUTE /3/0/3       でrebootが呼ばれるよう設定
 
   // ブートストラップ(接続情報取得)実行
   // 成功するまで繰り返す
@@ -68,15 +71,16 @@ void getSerial(Lwm2mTLV *tlv){
 
 // WRITEの場合は値がtlvの各要素から渡される
 // 対応する要素はREADと同じ
-void setTimezone(Lwm2mTLV *tlv){
-  strcpy(sampleText, (char *)&tlv->bytesValue[0]);
+void turnOnOffLED(Lwm2mTLV *tlv){
+  if (tlv->intValue){
+    wio.LedSetRGB(255, 0, 0);
+  } else {
+    wio.LedSetRGB(0, 0, 0);
+  }
 };
 
 // EXECUTEの場合、
 // パラメータはOpaqueと同じ形式で渡す(使わなくてもよい)
 void reboot(Lwm2mTLV *tlv){
-  wio.LedSetRGB(255, 0, 0);
-  delay(1000);
-  wio.LedSetRGB(0, 0, 0);
   NVIC_SystemReset();
 };
