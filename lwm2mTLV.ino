@@ -25,11 +25,11 @@ int lwm2mTLVSerialize(Lwm2mTLV *tlv, uint8 *output){
     switch (tlv->resourceType){
         case Lwm2mResourceTypeInteger:
         case Lwm2mResourceTypeTime:
-            if ( tlv->intValue < (1<<7) && tlv->intValue >= -(1<<7)) {
+            if ( tlv->intValue <= 127 && tlv->intValue >= -128) {
                 value[len++] = (uint8)(tlv->intValue);
-            } else if (tlv->intValue < (1<<15) && tlv->intValue >= -(1<<15)) {
+            } else if (tlv->intValue <= 32767 && tlv->intValue >= -32768) {
                 len += putUint16ToBytes((uint16)(tlv->intValue), &value[len]);
-            } else if (tlv->intValue < (1<<31) && tlv->intValue >= -(1<<31)) {
+            } else if (tlv->intValue <= 2147483647L && tlv->intValue >= -2147483648L) {
                 len += putUint32ToBytes((uint32)(tlv->intValue), &value[len]);
             } else {
                 len += putUint64ToBytes((uint64)(tlv->intValue), &value[len]);
@@ -136,7 +136,7 @@ int lwm2mTLVDeserialize(Lwm2mTLV *tlv, uint8 *input){
             } else if (len == 4){
                 tlv->intValue = (int32)(getUint32FromBytes(&input[index]));
             } else if (len == 8){
-                tlv->intValue = (int64)(getUint32FromBytes(&input[index]));
+                tlv->intValue = (int64)(getUint64FromBytes(&input[index]));
             }
             break;
         case Lwm2mResourceTypeFloat:
