@@ -244,7 +244,14 @@ void lwm2mReadInstance(Lwm2m *lwm2m, uint16 objectID, uint16 instanceID){
 
     buf[index++] = 0xff;
 
-    index += readInstanceOperation(lwm2m, objectID, instanceID, &buf[index]);
+    int result = readInstanceOperation(lwm2m, objectID, instanceID, &buf[index]);
+    if (result >= 0){
+        index += result;
+    } else {
+        // エラーが発生した場合はCoapCodeを上書きする
+        buf[1] = (uint8)(-result);
+        buf[--index] = 0;
+    }
 
     dtlsSendPacket(&lwm2m->dtls, buf, index);
 }
@@ -271,6 +278,7 @@ void lwm2mReadResource(Lwm2m *lwm2m, uint16 objectID, uint16 instanceID, uint16 
     } else {
         // エラーが発生した場合はCoapCodeを上書きする
         buf[1] = (uint8)(-result);
+        buf[--index] = 0;
     }
 
     dtlsSendPacket(&lwm2m->dtls, buf, index);
@@ -285,7 +293,11 @@ void lwm2mWriteInstance(Lwm2m *lwm2m, uint16 objectID, uint16 instanceID, uint8 
     int index = 0;
     index += coapCreateResponseHeader(&lwm2m->coap, CoapTypeAcknowledgement, CoapCodeChanged, &buf[index]);
 
-    writeInstanceOperation(lwm2m, objectID, instanceID, input, len);
+    int result = writeInstanceOperation(lwm2m, objectID, instanceID, input, len);
+    if (result < 0){
+        // エラーが発生した場合はCoapCodeを上書きする
+        buf[1] = (uint8)(-result);
+    }
 
     if (lwm2m->bootstraped){
         dtlsSendPacket(&lwm2m->dtls, buf, index);
@@ -304,9 +316,7 @@ void lwm2mWriteResource(Lwm2m *lwm2m, uint16 objectID, uint16 instanceID, uint16
     index += coapCreateResponseHeader(&lwm2m->coap, CoapTypeAcknowledgement, CoapCodeChanged, &buf[index]);
 
     int result = writeResourceOperation(lwm2m, objectID, instanceID, resourceID, input, len);
-    if (result >= 0){
-        index += result;
-    } else {
+    if (result < 0){
         // エラーが発生した場合はCoapCodeを上書きする
         buf[1] = (uint8)(-result);
     }
@@ -324,9 +334,7 @@ void lwm2mExecuteResource(Lwm2m *lwm2m, uint16 objectID, uint16 instanceID, uint
     index += coapCreateResponseHeader(&lwm2m->coap, CoapTypeAcknowledgement, CoapCodeChanged, &buf[index]);
     
     int result = executeResourceOperation(lwm2m, objectID, instanceID, resourceID, input, len);
-    if (result >= 0){
-        index += result;
-    } else {
+    if (result < 0){
         // エラーが発生した場合はCoapCodeを上書きする
         buf[1] = (uint8)(-result);
     }
