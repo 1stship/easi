@@ -36,8 +36,7 @@ int lwm2mTLVSerialize(Lwm2mTLV *tlv, uint8 *output){
             }
             break;
         case Lwm2mResourceTypeFloat:
-            memcpy(value, &tlv->floatValue, 8);
-            len = 8;
+            len += putFloat64ToBytes((float64)(tlv->floatValue), &value[len]);
             break;
         case Lwm2mResourceTypeBoolean:
             value[len++] = (uint8)(tlv->intValue);
@@ -140,7 +139,7 @@ int lwm2mTLVDeserialize(Lwm2mTLV *tlv, uint8 *input){
             }
             break;
         case Lwm2mResourceTypeFloat:
-            memcpy(&tlv->floatValue, &input[index], 8);
+            tlv->floatValue = (float64)(getFloat64FromBytes(&input[index]));
             break;
         case Lwm2mResourceTypeBoolean:
             tlv->intValue = input[index];

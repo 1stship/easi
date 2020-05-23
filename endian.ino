@@ -5,11 +5,13 @@ int putUint24ToBytes(uint32 input, uint8 *output);
 int putUint32ToBytes(uint32 input, uint8 *output);
 int putUint48ToBytes(uint64 input, uint8 *output);
 int putUint64ToBytes(uint64 input, uint8 *output);
+int putFloat64ToBytes(float64 input, uint8 *output);
 uint16 getUint16FromBytes(const uint8 *input);
 uint32 getUint24FromBytes(const uint8 *input);
 uint32 getUint32FromBytes(const uint8 *input);
 uint64 getUint48FromBytes(const uint8 *input);
 uint64 getUint64FromBytes(const uint8 *input);
+float64 getFloat64FromBytes(const uint8 *input);
 uint32 getReverseUint32(uint32 input);
 uint64 getReverseUint64(uint64 input);
 
@@ -53,6 +55,15 @@ int putUint64ToBytes(uint64 input, uint8 *output){
     output[5] = (uint8)(input >> 16);
     output[6] = (uint8)(input >> 8);
     output[7] = (uint8)(input >> 0);
+    return 8;
+}
+
+int putFloat64ToBytes(float64 input, uint8 *output){
+    uint8 temp[8];
+    memcpy(temp, &input, 8);
+    for (int i = 0; i < 8; i++){
+      output[i] = temp[7 - i];
+    }
     return 8;
 }
 
@@ -101,6 +112,16 @@ uint64 getUint64FromBytes(const uint8 *input){
     ret += ((uint64)input[5]) << 16;
     ret += ((uint64)input[6]) << 8;
     ret += ((uint64)input[7]) << 0;
+    return ret;
+}
+
+float64 getFloat64FromBytes(const uint8 *input){
+    float64 ret = 0.0;
+    uint8 temp[8];
+    for (int i = 0; i < 8; i++){
+      temp[i] = input[7 - i];
+    }
+    memcpy(&ret, temp, 8);
     return ret;
 }
 
