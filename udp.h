@@ -6,7 +6,6 @@
 
 typedef struct {
   int sock;
-  WioLTE *wio;
 } UDP;
 
 void udpInit(UDP *udp, char *host, int port);

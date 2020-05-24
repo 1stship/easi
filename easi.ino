@@ -1,4 +1,5 @@
 #include "easi.h"
+#include <WioLTEforArduino.h>
 
 Lwm2m lwm2m;
 WioLTE wio;
