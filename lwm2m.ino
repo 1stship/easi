@@ -366,6 +366,9 @@ void lwm2mParsePacket(Lwm2m *lwm2m, uint8 *buf, int len){
             } else {
                 // bootstrap Request ACK
             }
+        } else if (code == CoapCodeNotFound) {
+            logText("Not Found");
+            lwm2m->registered = false;
         }
     } else if (type == CoapTypeConfirmable) {
         lwm2m->coap.ackMessageID = getUint16FromBytes(&buf[index]);
