@@ -18,7 +18,7 @@ int coapParseOptions(uint8 *input, int len, CoapOptions *options);
 uint16 coapSetOption(uint16 delta, uint8 *value, uint16 valueLen, uint8 *output);
 
 void coapPrepare(Coap *coap){
-    coap->nextMessageID = (uint16)rand();
+    coap->nextMessageID = (uint16)random(255);
     coap->ackMessageID = 0;
     memset(&coap->ackToken[0], 0, sizeof(coap->ackToken));
 }
@@ -27,7 +27,7 @@ int coapCreateRequestHeader(Coap *coap, enum CoapType type, enum CoapCode code, 
     int index = 0;
     uint8 token[8];
     for(int i = 0; i < 8; i++){
-        token[i] = (uint8)(rand());
+        token[i] = (uint8)(random(255));
     }
 
     output[index++] = (CoapVersion << 6) // Version = 1

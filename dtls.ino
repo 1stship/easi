@@ -79,7 +79,7 @@ void initDtls(Dtls *dtls, char *identity, uint8 *psk){
 void setClientRandom(DtlsHandshake *handshake){
     memset(handshake->clientRandom, 0, 4);
     for (int i = 4; i < 32; i++){
-        handshake->clientRandom[i] = (uint8)random();
+        handshake->clientRandom[i] = (uint8)random(255);
     }
 }
 

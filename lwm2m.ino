@@ -24,6 +24,7 @@ void lwm2mBootstrapFinishRequest(Lwm2m *lwm2m, uint8 *buf, int len);
 void lwm2mClearBuffer();
 
 void lwm2mInit(Lwm2m *lwm2m, char *endpoint){
+    randomSeed(analogRead(0));
     strncpy((char *)&lwm2m->endpoint[0], endpoint, sizeof(lwm2m->endpoint));
     lwm2m->registered = false;
     lwm2m->bootstraped = false;
