@@ -461,6 +461,7 @@ bool sendFinished(Dtls *dtls){
 bool startHandshake(Dtls *dtls, char *identity, uint8 *psk){
     initDtls(dtls, identity, psk);
     setClientRandom(&dtls->handshake);
+    udpClearBuffer(&dtls->udp);
     if (!getCookie(dtls)){
         dtls->verified = false;
         return false;

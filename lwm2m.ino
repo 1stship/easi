@@ -21,6 +21,7 @@ void lwm2mExecuteRequest(Lwm2m *lwm2m, uint8 *buf, int len);
 void lwm2mSendBootstrapResponse(Lwm2m *lwm2m, enum CoapCode code);
 void lwm2mDeleteRequest(Lwm2m *lwm2m, uint8 *buf, int len);
 void lwm2mBootstrapFinishRequest(Lwm2m *lwm2m, uint8 *buf, int len);
+void lwm2mClearBuffer();
 
 void lwm2mInit(Lwm2m *lwm2m, char *endpoint){
     strncpy((char *)&lwm2m->endpoint[0], endpoint, sizeof(lwm2m->endpoint));
@@ -34,6 +35,7 @@ bool lwm2mBootstrap(Lwm2m *lwm2m){
     uint8 buf[1024];
     int index = 0;
     coapPrepare(&lwm2m->coap);
+    udpClearBuffer(&lwm2m->bootstrapUdp);
     index += coapCreateRequestHeader(&lwm2m->coap, CoapTypeConfirmable, CoapCodePost, &buf[index]);
 
     CoapOptions options;

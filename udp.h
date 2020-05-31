@@ -13,5 +13,6 @@ typedef struct {
 bool udpInit(UDPComm *udp, char *host, int port);
 int udpSend(UDPComm *udp, uint8 *buf, int len);
 int udpRecv(UDPComm *udp, uint8 *buf, int len, uint16 timeout);
+void udpClearBuffer(UDPComm *udp);
 
 #endif

@@ -5,6 +5,7 @@ extern WioLTE wio;
 bool udpInit(UDPComm *udp, char *host, int port);
 int udpSend(UDPComm *udp, uint8 *buf, int len);
 int udpRecv(UDPComm *udp, uint8 *buf, int len, uint16 timeout);
+void udpClearBuffer(UDPComm *udp);
 
 bool udpInit(UDPComm *udp, char *host, int port){
     int sock = wio.SocketOpen(host, port, WIOLTE_UDP);
@@ -30,4 +31,9 @@ int udpSend(UDPComm *udp, uint8 *buf, int len){
 int udpRecv(UDPComm *udp, uint8 *buf, int len, uint16 timeout){
     int recvLen = wio.SocketReceive(udp->sock, buf, len, timeout);
     return recvLen;
+}
+
+void udpClearBuffer(UDPComm *udp){
+    char buf[UDP_RECV_BUF_LENGTH];
+    while (udpRecv(udp, (uint8 *)buf, sizeof(buf), 1000) > 0) { };
 }
