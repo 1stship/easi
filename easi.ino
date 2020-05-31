@@ -64,7 +64,12 @@ void setup() {
 #endif
 
   // LWM2Mエンドポイントとブートストラップサーバの設定
+#ifdef EASI_WIO_LTE
   lwm2mInit(&lwm2m, "wiolte");
+#endif
+#ifdef EASI_M5_STACK
+  lwm2mInit(&lwm2m, "m5stack");
+#endif
   udpInit(&lwm2m.bootstrapUdp, "bootstrap.soracom.io", 5683);
 
   // ブートストラップをせず払い出したデバイスIDとキーを使用する場合はこちら
