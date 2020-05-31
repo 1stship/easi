@@ -48,7 +48,7 @@ bool lwm2mBootstrap(Lwm2m *lwm2m){
     udpSend(&lwm2m->bootstrapUdp, buf, index);
 
     while (!lwm2m->bootstraped) {
-        uint8 recvBuf[4096];
+        uint8 recvBuf[UDP_RECV_BUF_LENGTH];
         int readLen = udpRecv(&lwm2m->bootstrapUdp, recvBuf, sizeof(recvBuf), 5000);
         if (readLen == 0){
             return false;
@@ -93,7 +93,7 @@ bool lwm2mCheckEvent(Lwm2m *lwm2m){
         return true;
     }
 
-    uint8 recvBuf[4096];
+    uint8 recvBuf[UDP_RECV_BUF_LENGTH];
     int recvLen = dtlsRecvPacket(&lwm2m->dtls, recvBuf, 1000);
     if (recvLen < 0){
         logText("Receive invalid packet");
@@ -399,7 +399,7 @@ void lwm2mParsePacket(Lwm2m *lwm2m, uint8 *buf, int len){
 
 // 一定時間内に受信が無ければエラーとする受信
 void lwm2mReceivePacketWithTimeoutError(Lwm2m *lwm2m, uint16 timeout){
-    uint8 recvBuf[4096];
+    uint8 recvBuf[UDP_RECV_BUF_LENGTH];
     int recvLen = dtlsRecvPacket(&lwm2m->dtls, recvBuf, 1000);
     if (recvLen < 0){
         lwm2m->registered = false;

@@ -19,7 +19,7 @@ void lwm2mTLVInit(Lwm2mTLV *tlv, enum Lwm2mTypeOfID typeOfId, enum Lwm2mResource
 
 // outputにTLVシリアライズ結果を格納してサイズを返す
 int lwm2mTLVSerialize(Lwm2mTLV *tlv, uint8 *output){
-    uint8 value[4096];
+    uint8 value[UDP_RECV_BUF_LENGTH];
     uint32 len = 0;
 
     switch (tlv->resourceType){

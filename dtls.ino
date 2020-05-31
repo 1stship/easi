@@ -289,7 +289,7 @@ bool getCookie(Dtls *dtls){
     dtls->handshake.clientSequence++;
 
     // Receive Hello Verify Request
-    uint8 readBuf[4096];
+    uint8 readBuf[UDP_RECV_BUF_LENGTH];
     int readLen = udpRecv(&dtls->udp, readBuf, sizeof(readBuf), 1000);
     if (readLen == 0){ // Timeout
         return false;
@@ -328,7 +328,7 @@ bool getSession(Dtls *dtls){
     dtls->handshake.clientSequence++;
 
     // Receive Server Hello, Server Hello Done
-    uint8 readBuf[4096];
+    uint8 readBuf[UDP_RECV_BUF_LENGTH];
     int readLen = udpRecv(&dtls->udp, readBuf, sizeof(readBuf), 1000);
     if (readLen == 0){ // Timeout
         return false;
@@ -419,7 +419,7 @@ bool sendFinished(Dtls *dtls){
     dtls->handshake.clientSequence++;
 
     // Receive Change Cipher Spec, encrypted Finished
-    uint8 readBuf[4096];
+    uint8 readBuf[UDP_RECV_BUF_LENGTH];
     int readLen = udpRecv(&dtls->udp, readBuf, sizeof(readBuf), 1000);
     if (readLen == 0){ // Timeout
         return false;
@@ -496,7 +496,7 @@ bool dtlsSendPacket(Dtls *dtls, uint8 *data, uint16 len){
 }
 
 int dtlsRecvPacket(Dtls *dtls, uint8 *output, uint16 timeout){
-    uint8 buf[4096];
+    uint8 buf[UDP_RECV_BUF_LENGTH];
     int readLen = udpRecv(&dtls->udp, buf, sizeof(buf), timeout);
     if (readLen == 0){
         // timeout

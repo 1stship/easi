@@ -29,7 +29,7 @@ typedef struct {
     float64 floatValue; // Float
     uint16 ObjectLinkValue; // objlnk
     uint16 InstanceLinkValue; // objlnk
-    uint8 bytesValue[4096]; // String, Opaque
+    uint8 bytesValue[UDP_RECV_BUF_LENGTH]; // String, Opaque
     int bytesLen; // string, Opaque
 } Lwm2mTLV;
 
