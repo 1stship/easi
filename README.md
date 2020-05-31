@@ -4,7 +4,7 @@ easi(イージー)はソラコム社のデバイス管理サービスSORACOM Inv
 
 https://soracom.jp/services/inventory/
 
-主にSeeed社のマイコンモジュールWio LTE JP Versionをターゲットにしています。
+主にSeeed社のマイコンモジュールWio LTE JP Version、スイッチサイエンス社のM5Stack Basic 3G 拡張ボード セットをターゲットにしています。
 
 簡単にマイコンを遠隔操作することができる以下の特徴を持ちます。
 
@@ -13,11 +13,17 @@ https://soracom.jp/services/inventory/
 
 ## 取得方法
 
-このリポジトリをクローンします。
+リリースページから書き込み対象ボードの最新バージョンのアーカイブをダウンロードします。
+https://github.com/1stship/easi/releases
+
 easi.inoをArduino IDEで開くとそのままコンパイル、書き込みできます。
 Arduino IDE およびライブラリの導入については、以下の資料をご覧ください。
 
+Wio LTE JP Version
 https://dev.soracom.io/jp/start/lte_hw_wio-lte/
+
+M5Stack Basic 3G 拡張ボード セット
+https://dev.soracom.io/jp/start/m5stack/
 
 ## 使用方法
 
@@ -27,12 +33,12 @@ https://dev.soracom.io/jp/start/lte_hw_wio-lte/
 SORACOMのユーザーコンソールにログインし、左サイドメニューからSORACOM Inventory → デバイス管理を選択します。
 https://console.soracom.io/#/devices?coverage_type=jp
 
-Endpointがwiolteとなっているデバイスが表示されていればOKです。
+Endpointがwiolte(Wio LTE)、もしくはm5stack(m5stack)となっているデバイスが表示されていればOKです。
 されていなければ電源再投入、プログラム書き込み直しなどを試してください。
 
 デバイスを選択し、詳細ボタンをクリックするとデバイスの状態を表すリソースと、READ/ WRITE / EXECUTEなどのボタンが表示されます。
 
-Reboot /3/0/4となっているリソースを探し、EXECUTEのボタン(右向き三角ボタン)をクリックし、コマンド実行をクリックしてみてください。Wio LTEのLEDが赤く光って再起動すれば成功です。
+Reboot /3/0/4となっているリソースを探し、EXECUTEのボタン(右向き三角ボタン)をクリックし、コマンド実行をクリックしてみてください。ボードが再起動されれば成功です。
 
 ## カスタマイズ方法
 
