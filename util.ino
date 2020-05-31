@@ -8,5 +8,7 @@ uint32 getNowMilliseconds(){
 }
 
 void logText(char *log){
+#ifdef EASI_WIO_LTE
     SerialUSB.println(log);
+#endif
 }

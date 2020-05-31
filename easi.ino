@@ -1,11 +1,15 @@
 #include "easi.h"
 #include <WioLTEforArduino.h>
+#define EASI_WIO_LTE
 
 Lwm2m lwm2m;
+#ifdef EASI_WIO_LTE
 WioLTE wio;
+#endif
 
 void setup() {
   // 初期化
+#ifdef EASI_WIO_LTE
   delay(200);
   wio.Init();
   wio.PowerSupplyLTE(true);
@@ -22,6 +26,7 @@ void setup() {
     return;
   }
   delay(1000);
+#endif
 
   // LWM2Mエンドポイントとブートストラップサーバの設定
   lwm2mInit(&lwm2m, "wiolte");
@@ -73,15 +78,19 @@ void getSerial(Lwm2mTLV *tlv){
 // WRITEの場合は値がtlvの各要素から渡される
 // 対応する要素はREADと同じ
 void turnOnOffLED(Lwm2mTLV *tlv){
+#ifdef EASI_WIO_LTE
   if (tlv->intValue){
     wio.LedSetRGB(255, 0, 0);
   } else {
     wio.LedSetRGB(0, 0, 0);
   }
+#endif
 };
 
 // EXECUTEの場合、
 // パラメータはOpaqueと同じ形式で渡す(使わなくてもよい)
 void reboot(Lwm2mTLV *tlv){
+#ifdef EASI_WIO_LTE
   NVIC_SystemReset();
+#endif
 };

@@ -8,6 +8,7 @@ int udpRecv(UDPComm *udp, uint8 *buf, int len, uint16 timeout);
 void udpClearBuffer(UDPComm *udp);
 
 bool udpInit(UDPComm *udp, char *host, int port){
+#ifdef EASI_WIO_LTE
     int sock = wio.SocketOpen(host, port, WIOLTE_UDP);
     if (sock >= 0){
         udp->sock = sock;
@@ -17,20 +18,25 @@ bool udpInit(UDPComm *udp, char *host, int port){
     } else {
         return false;
     }
+#endif
 }
 
 int udpSend(UDPComm *udp, uint8 *buf, int len){
+#ifdef EASI_WIO_LTE
     bool ret = wio.SocketSend(udp->sock, buf, len);
     if (ret) {
         return len;
     } else {
         return 0;
     }
+#endif
 }
 
 int udpRecv(UDPComm *udp, uint8 *buf, int len, uint16 timeout){
+#ifdef EASI_WIO_LTE
     int recvLen = wio.SocketReceive(udp->sock, buf, len, timeout);
     return recvLen;
+#endif
 }
 
 void udpClearBuffer(UDPComm *udp){
