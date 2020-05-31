@@ -10,7 +10,7 @@ typedef struct {
     char identity[32];
     uint8 psk[16];
     Coap coap;
-    UDP bootstrapUdp;
+    UDPComm bootstrapUdp;
     uint8 endpoint[64];
     uint32 updatedTimestamp;
     uint8 location[16];

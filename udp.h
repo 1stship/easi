@@ -6,10 +6,12 @@
 
 typedef struct {
   int sock;
-} UDP;
+  char host[64];
+  int port;
+} UDPComm;
 
-void udpInit(UDP *udp, char *host, int port);
-void udpSend(UDP *udp, uint8 *buf, int len);
-int udpRecv(UDP *udp, uint8 *buf, int len, uint16 timeout);
+bool udpInit(UDPComm *udp, char *host, int port);
+int udpSend(UDPComm *udp, uint8 *buf, int len);
+int udpRecv(UDPComm *udp, uint8 *buf, int len, uint16 timeout);
 
 #endif

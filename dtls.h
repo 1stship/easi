@@ -20,7 +20,7 @@ typedef struct {
 
 typedef struct {
     DtlsHandshake handshake;
-    UDP udp;
+    UDPComm udp;
     uint16 serverEpoch;
     uint16 clientEpoch;
     uint64 serverSequence;
