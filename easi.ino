@@ -1,10 +1,19 @@
 #include "easi.h"
-#include <WioLTEforArduino.h>
+
 #define EASI_WIO_LTE
+// #define EASI_M5_STACK
+#define EASI_VERSION "V1.1.0"
 
 Lwm2m lwm2m;
 #ifdef EASI_WIO_LTE
+#include <WioLTEforArduino.h>
 WioLTE wio;
+#endif
+#ifdef EASI_M5_STACK
+#include <M5Stack.h>
+#define TINY_GSM_MODEM_UBLOX
+#include <TinyGsmClient.h>
+TinyGsm modem(Serial2);
 #endif
 
 void setup() {
@@ -27,6 +36,32 @@ void setup() {
   }
   delay(1000);
 #endif
+#ifdef EASI_M5_STACK
+  Serial.begin(115200);
+  M5.begin();
+  M5.Lcd.clear(BLACK);
+  M5.Lcd.setTextColor(WHITE);
+  M5.Lcd.println(F("M5Stack + 3G Module"));
+
+  M5.Lcd.print(F("Modem Initialize..."));
+  Serial2.begin(115200, SERIAL_8N1, 16, 17);
+  modem.restart();
+  M5.Lcd.println(F("done"));
+
+  M5.Lcd.print(F("Connecting 3G..."));
+  while (!modem.waitForNetwork()) M5.Lcd.print(".");
+  M5.Lcd.println(F("done"));
+
+  M5.Lcd.print(F("Connecting SORACOM..."));
+  modem.gprsConnect("soracom.io", "sora", "sora");
+  M5.Lcd.println(F("done"));
+
+  M5.Lcd.print(F("Checking Network..."));
+  while (!modem.isNetworkConnected()) M5.Lcd.print(".");
+  M5.Lcd.println(F("OK"));
+
+  delay(2000);
+#endif
 
   // LWM2Mエンドポイントとブートストラップサーバの設定
   lwm2mInit(&lwm2m, "wiolte");
@@ -48,13 +83,20 @@ void setup() {
   addInstance(3311, 0);
 
   // オペレーションとメソッドを対応づけのサンプル
-  setReadResourceOperation   (   3, 0,    2, &getSerial);    // READ    /3/0/2       でgetSerialが呼ばれるよう設定
-  setWriteResourceOperation  (3311, 0, 5850, &turnOnOffLED); // WRITE   /3311/0/5850 turnOnOffLEDが呼ばれるよう設定
-  setExecuteResourceOperation(   3, 0,    4, &reboot);       // EXECUTE /3/0/3       でrebootが呼ばれるよう設定
+  setReadResourceOperation   (   3, 0,    2, &getSerial);      // READ    /3/0/2       でgetSerialが呼ばれるよう設定
+  setWriteResourceOperation  (3311, 0, 5850, &turnOnOffLight); // WRITE   /3311/0/5850 でturnOnOffLightが呼ばれるよう設定
+  setExecuteResourceOperation(   3, 0,    4, &reboot);         // EXECUTE /3/0/3       でrebootが呼ばれるよう設定
 
   // ブートストラップ(接続情報取得)実行
   // 成功するまで繰り返す
+#ifdef EASI_M5_STACK
+  M5.Lcd.println(F("LwM2M Bootstraping..."));
+#endif
   while (!lwm2mBootstrap(&lwm2m)){ }
+#ifdef EASI_M5_STACK
+  M5.Lcd.println(F("OK"));
+  M5.Lcd.println(F("easi version " EASI_VERSION " is ready to play!"));
+#endif
 }
 
 void loop() {
@@ -77,12 +119,19 @@ void getSerial(Lwm2mTLV *tlv){
 
 // WRITEの場合は値がtlvの各要素から渡される
 // 対応する要素はREADと同じ
-void turnOnOffLED(Lwm2mTLV *tlv){
+void turnOnOffLight(Lwm2mTLV *tlv){
 #ifdef EASI_WIO_LTE
   if (tlv->intValue){
     wio.LedSetRGB(255, 0, 0);
   } else {
     wio.LedSetRGB(0, 0, 0);
+  }
+#endif
+#ifdef EASI_M5_STACK
+  if (tlv->intValue){
+    M5.Lcd.fillScreen(TFT_WHITE);
+  } else {
+    M5.Lcd.fillScreen(TFT_BLACK);
   }
 #endif
 };
@@ -92,5 +141,8 @@ void turnOnOffLED(Lwm2mTLV *tlv){
 void reboot(Lwm2mTLV *tlv){
 #ifdef EASI_WIO_LTE
   NVIC_SystemReset();
+#endif
+#ifdef EASI_M5_STACK
+  esp_restart();
 #endif
 };

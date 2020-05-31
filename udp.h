@@ -1,7 +1,6 @@
 #ifndef _UDP_H
 #define _UDP_H
 
-#include <WioLTEforArduino.h>
 #include "type.h"
 
 typedef struct {

@@ -11,4 +11,7 @@ void logText(char *log){
 #ifdef EASI_WIO_LTE
     SerialUSB.println(log);
 #endif
+#ifdef EASI_M5_STACK
+    Serial.println(log);
+#endif
 }
